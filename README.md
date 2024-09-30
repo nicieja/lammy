@@ -62,14 +62,15 @@ class User
     "Hallucinate a list of friends for #{name}."
   end
 
-  # OpenAI’s text embeddings measure the relatedness of text strings.
-  # The response will contain a list of floating point numbers, which
-  # you can extract, save in a vector database, and use for many
-  # different use cases.
+  # Text embeddings measure the relatedness of text strings. The response
+  # will contain a list of floating point numbers, which you can extract,
+  # save in a vector database, and use for many different use cases.
   v(model: "text-embedding-3-large")
   def embeddings
-    chunk_by_size 256
-    welcome
+    %Q{
+      Hi, I'm #{name}.
+      I'm a software engineer with a passion for Ruby and open-source development.
+    }
   end
 end
 
@@ -104,4 +105,9 @@ user.friends
 #   {"name"=>"Hannah Kim", "city"=>"Miami"},
 #   {"name"=>"Isaac Chen", "city"=>"Boston"},
 #   {"name"=>"Jessica Patel", "city"=>"Houston"}]}
+
+user.embeddings
+
+# => [0.123, -0.456, 0.789, ...]
+# This will be the embedding vector returned by the model
 ```

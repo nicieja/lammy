@@ -15,13 +15,13 @@ module L
 
       # Redefine the method
       define_method(method_name) do |*args, &block|
-        # Initialize chunking settings
-        @chunk_by_size = nil
+        # # Initialize chunking settings
+        # @chunk_by_size = nil
 
-        # Make `chunk_by_size` method available within the instance
-        define_singleton_method(:chunk_by_size) do |size|
-          @chunk_by_size = size
-        end
+        # # Make `chunk_by_size` method available within the instance
+        # define_singleton_method(:chunk_by_size) do |size|
+        #   @chunk_by_size = size
+        # end
 
         # Call the original method to get the input
         input = original_method.bind(self).call(*args, &block)
