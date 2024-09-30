@@ -36,6 +36,8 @@ require "lammy"
 
 ## Usage
 
+We currently only support OpenAI’s models. You can use any model that supports the OpenAI API. Make sure to set the `OPENAI_API_KEY` environment variable.
+
 ```ruby
 class User
   # To be able to make LLM calls, we first include `L` at the top of our class
