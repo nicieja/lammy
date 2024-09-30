@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'openai'
+require 'hashie'
 
 module L
   # Use the OpenAI API's official Ruby library
@@ -26,7 +27,7 @@ module L
       )
 
       content = response.dig('choices', 0, 'message', 'content')
-      settings[:schema] ? Hashie::Mash.new(JSON.parse(content)) : content
+      settings[:schema] ? ::Hashie::Mash.new(JSON.parse(content)) : content
     end
 
     # OpenAI’s text embeddings measure the relatedness of text strings. An embedding is a vector of floating point

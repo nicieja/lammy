@@ -87,4 +87,17 @@ user.welcome
 # we celebrate you in this poetic show.\n
 # eoD nhoJ, here's a cheer to you,\n
 # in every form, our friendship's true!"
+
+user.friends
+# => {"items"=>
+#  [{"name"=>"Alice Summers", "city"=>"Austin"},
+#   {"name"=>"Brian Thompson", "city"=>"Denver"},
+#   {"name"=>"Charlie Herrera", "city"=>"Seattle"},
+#   {"name"=>"Diana Flores", "city"=>"San Francisco"},
+#   {"name"=>"Eli Grant", "city"=>"New York"},
+#   {"name"=>"Fiona Collins", "city"=>"Chicago"},
+#   {"name"=>"George Baker", "city"=>"Los Angeles"},
+#   {"name"=>"Hannah Kim", "city"=>"Miami"},
+#   {"name"=>"Isaac Chen", "city"=>"Boston"},
+#   {"name"=>"Jessica Patel", "city"=>"Houston"}]}
 ```
