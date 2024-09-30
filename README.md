@@ -37,15 +37,32 @@ require "lammy"
 ## Usage
 
 ```ruby
-class User < ApplicationRecord
+class User
   include L
 
-  llm(model: 'gpt-4o')
-  def welcome
-    context "You are a helpful assistant that writes in lower case."
-    "Say hello to #{name.reverse} with a poem."
+  attr_reader :name
+
+  def initialize(name:)
+    @name = name
   end
 
+  # Take a message as input and return a model-generated message as output
+  llm(model: 'gpt-4o')
+  def welcome
+    context "You are an AI that only writes in lower case." # An optional system message
+    "Say hello to #{name.reverse} with a poem." # User message goes here
+  end
+
+  # Define a structured output schema for Lammy to handle JSON responses
+  llm(model: "gpt-4o-2024-08-06", schema: L.to_a(name: :string, city: :string))
+  def friends
+    "Hallucinate a list of friends for #{name}."
+  end
+
+  # OpenAI’s text embeddings measure the relatedness of text strings.
+  # The response will contain a list of floating point numbers, which
+  # you can extract, save in a vector database, and use for many
+  # different use cases.
   v(model: 'text-embedding-3-large')
   def embeddings
     chunk_by_size 256
