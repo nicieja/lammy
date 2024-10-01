@@ -17,17 +17,18 @@ module L
 
     # Generate a response with support for structured output
     def chat(settings, user_message, system_message = nil)
+      schema = schema(settings)
       response = client.chat(
         parameters: {
-          model: settings[:model], response_format: schema(settings), messages: [
+          model: settings[:model], response_format: schema, messages: [
             system_message ? { role: :system, content: system_message } : nil,
             { role: :user, content: user_message }
           ].compact
         }.compact
-      )
+      ).dig('choices', 0, 'message', 'content')
 
-      content = response.dig('choices', 0, 'message', 'content')
-      settings[:schema] ? ::Hashie::Mash.new(JSON.parse(content)) : content
+      content = schema ? ::Hashie::Mash.new(JSON.parse(response)) : response
+      array?(schema) ? content.items : content
     end
 
     # OpenAI’s text embeddings measure the relatedness of text strings. An embedding is a vector of floating point
@@ -51,12 +52,16 @@ module L
       return unless settings[:schema]
 
       {
-        type: :json_schema,
-        json_schema: {
-          name: :schema,
-          schema: settings[:schema]
+        'type' => 'json_schema',
+        'json_schema' => {
+          'name' => 'schema',
+          'schema' => settings[:schema]
         }
       }
+    end
+
+    def array?(schema)
+      schema.is_a?(Hash) && schema.dig('json_schema', 'schema', 'properties', 'items', 'type') == 'array'
     end
 
     def client

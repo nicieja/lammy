@@ -65,11 +65,11 @@ class User
   # Text embeddings measure the relatedness of text strings. The response
   # will contain a list of floating point numbers, which you can extract,
   # save in a vector database, and use for many different use cases.
-  v(model: "text-embedding-3-large")
+  v(model: "text-embedding-3-large", dimensions: 256)
   def embeddings
     %Q{
-      Hi, I'm #{name}.
-      I'm a software engineer with a passion for Ruby and open-source development.
+      Hi, I'm #{name}. I'm a software engineer with a passion for Ruby
+      and open-source development.
     }
   end
 end
@@ -80,22 +80,11 @@ user.welcome
 # => "hello eoD nhoJ, let's make a cheer,\n
 # with a whimsical poem to bring you near.\n
 # though your name's in reverse, it’s clear and bright,\n
-# let's dance in verse on this delightful night.\n\n
-#
-# to a friend unique, in every single way,\n
-# we flip the letters but the bond will stay.\n
-# the sun may set and rise again,\n
-# with you, the fun will never wane.\n\n
-#
-# through twists and turns, in backwards flow,\n
-# we celebrate you in this poetic show.\n
-# eoD nhoJ, here's a cheer to you,\n
-# in every form, our friendship's true!"
+# let's dance in verse on this delightful night!"
 
 user.friends
 
-# => {"items"=>
-#  [{"name"=>"Alice Summers", "city"=>"Austin"},
+# => [{"name"=>"Alice Summers", "city"=>"Austin"},
 #   {"name"=>"Brian Thompson", "city"=>"Denver"},
 #   {"name"=>"Charlie Herrera", "city"=>"Seattle"},
 #   {"name"=>"Diana Flores", "city"=>"San Francisco"},
@@ -104,7 +93,7 @@ user.friends
 #   {"name"=>"George Baker", "city"=>"Los Angeles"},
 #   {"name"=>"Hannah Kim", "city"=>"Miami"},
 #   {"name"=>"Isaac Chen", "city"=>"Boston"},
-#   {"name"=>"Jessica Patel", "city"=>"Houston"}]}
+#   {"name"=>"Jessica Patel", "city"=>"Houston"}]
 
 user.embeddings
 

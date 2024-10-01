@@ -22,7 +22,7 @@ module L
     def to_h(object)
       {
         'type' => 'object',
-        "properties": object.inject({}) { |h, (k, v)| h.merge(k => { 'type' => v }) },
+        "properties": object.inject({}) { |h, (k, v)| h.merge(k.to_s => { 'type' => v.to_s }) },
         "required": object.keys,
         "additionalProperties": false
       }
