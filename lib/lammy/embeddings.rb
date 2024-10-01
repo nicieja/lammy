@@ -37,8 +37,8 @@ module L
 
         case settings[:model]
         when *OpenAI::EMBEDDINGS
-          client = OpenAI.new
-          client.embeddings(settings, input)
+          client = OpenAI.new(settings)
+          client.embeddings(input)
         else
           raise "Unsupported model: #{settings[:model]}"
         end

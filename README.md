@@ -101,3 +101,32 @@ user.embeddings
 # => [0.123, -0.456, 0.789, ...]
 # This will be the embedding vector returned by the model
 ```
+
+For a more robust setup, you can configure the client directly:
+
+```ruby
+# Helicone is an open-source LLM observability platform for developers
+# to monitor, debug, and optimize their apps
+$helicone = OpenAI::Client.new(
+  access_token: "access_token_goes_here",
+  uri_base: "https://oai.hconeai.com/",
+  request_timeout: 240,
+  extra_headers: {
+    "X-Proxy-TTL" => "43200",
+    "X-Proxy-Refresh": "true",
+    "Helicone-Auth": "Bearer HELICONE_API_KEY",
+    "helicone-stream-force-format" => "true",
+  }
+)
+
+class User
+  include L
+
+  # (...)
+
+  llm(model: "gpt-4o", client: $helicone)
+  def description
+    "Describe #{name} in a few sentences."
+  end
+end
+```

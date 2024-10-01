@@ -15,8 +15,14 @@ module L
       text-embedding-3-small text-embedding-3-large text-embedding-ada-002
     ].freeze
 
+    attr_reader :settings
+
+    def initialize(settings)
+      @settings = settings
+    end
+
     # Generate a response with support for structured output
-    def chat(settings, user_message, system_message = nil)
+    def chat(user_message, system_message = nil)
       schema = schema(settings)
       response = client.chat(
         parameters: {
@@ -34,7 +40,7 @@ module L
     # OpenAI’s text embeddings measure the relatedness of text strings. An embedding is a vector of floating point
     # numbers. The distance between two vectors measures their relatedness. Small distances suggest high relatedness
     # and large distances suggest low relatedness.
-    def embeddings(settings, chunks)
+    def embeddings(chunks)
       responses = chunks.map do |chunk|
         response = client.embeddings(
           parameters: { model: settings[:model], dimensions: settings[:dimensions], input: chunk }
@@ -65,6 +71,8 @@ module L
     end
 
     def client
+      return settings[:client] if settings[:client]
+
       @client ||= ::OpenAI::Client.new(
         access_token: ENV.fetch('OPENAI_ACCESS_TOKEN')
       )

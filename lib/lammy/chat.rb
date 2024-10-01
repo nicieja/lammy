@@ -28,8 +28,8 @@ module L
 
         case settings[:model]
         when *OpenAI::MODELS
-          client = OpenAI.new
-          client.chat(settings, user_message, @system_message)
+          client = OpenAI.new(settings)
+          client.chat(user_message, @system_message)
         else
           raise "Unsupported model: #{settings[:model]}"
         end
