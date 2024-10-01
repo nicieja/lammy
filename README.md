@@ -56,7 +56,8 @@ class User
     "Say hello to #{name.reverse} with a poem." # User message goes here
   end
 
-  # Define a structured output schema for Lammy to handle JSON responses
+  # Define a structured output schema for Lammy to handle JSON responses.
+  # For a single object instead of an array, use `L.to_h`.
   llm(model: "gpt-4o-2024-08-06", schema: L.to_a(name: :string, city: :string))
   def friends
     "Hallucinate a list of friends for #{name}."
