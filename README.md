@@ -36,7 +36,7 @@ require "lammy"
 
 ## Usage
 
-We currently only support OpenAI’s models. You can use any model that supports the OpenAI API. Make sure to set the `OPENAI_API_KEY` environment variable.
+We currently support OpenAI's models and Anthropic's Claude. You can use any model that supports the OpenAI API or Claude. Make sure to set the `OPENAI_API_KEY` environment variable for OpenAI models or the `ANTHROPIC_API_KEY` for Claude models.
 
 ```ruby
 class User

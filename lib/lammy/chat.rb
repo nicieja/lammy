@@ -26,13 +26,16 @@ module L
         # Call the original method to get the user message
         user_message = original_method.bind(self).call(*args, &block)
 
-        case settings[:model]
-        when *OpenAI::MODELS
-          client = OpenAI.new(settings)
-          client.chat(user_message, @system_message)
-        else
-          raise "Unsupported model: #{settings[:model]}"
-        end
+        client = case settings[:model]
+                 when *OpenAI::MODELS
+                   OpenAI.new(settings)
+                 when *Claude::MODELS
+                   Claude.new(settings)
+                 else
+                   raise "Unsupported model: #{settings[:model]}"
+                 end
+
+        client.chat(user_message, @system_message)
       end
     end
   end

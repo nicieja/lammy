@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'lammy/embeddings'
+require 'lammy/claude'
 require 'lammy/openai'
 require 'lammy/schema'
 require 'lammy/chat'
