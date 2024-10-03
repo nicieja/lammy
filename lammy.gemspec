@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'lammy'
-  s.version = '0.4.0'
+  s.version = '0.5.0'
   s.summary = 'Lammy'
   s.description = 'An LLM library for Ruby'
   s.authors = ['Kamil Nicieja']

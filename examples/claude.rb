@@ -11,8 +11,12 @@ class User
   # Take a message as input and return a model-generated message as output
   llm(model: "claude-3-5-sonnet-20240620")
   def welcome
-    context "You are an AI that only writes in lower case." # An optional system message
-    "Say hello to #{name.reverse} with a poem." # User message goes here
+    # An optional system message
+    context "You are an AI that only writes in lower case."
+    # When using Claude, you have the ability to guide its responses by prefilling it
+    prefill "here's a little poem for you:"
+    # User message goes here
+    "Say hello to #{name.reverse} with a poem."
   end
 end
 

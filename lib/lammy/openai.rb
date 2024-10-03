@@ -22,7 +22,7 @@ module L
     end
 
     # Generate a response with support for structured output
-    def chat(user_message, system_message = nil)
+    def chat(user_message, system_message = nil, _ = nil)
       schema = schema(settings)
       response = client.chat(
         parameters: {

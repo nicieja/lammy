@@ -130,3 +130,22 @@ class User
   end
 end
 ```
+
+When using Claude, you have the ability to guide its responses by prefilling it:
+
+```ruby
+class User
+  include L
+
+  # (...)
+
+  llm(model: "claude-3-5-sonnet-20240620")
+  def welcome
+    context "You are an AI that only writes in lower case."
+    prefill "here's a little poem for you:"
+    "Say hello to #{name.reverse} with a poem."
+  end
+end
+```
+
+Please note that Claude’s response will continue from where your message leaves off.
