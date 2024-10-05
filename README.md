@@ -131,7 +131,7 @@ class User
 end
 ```
 
-When using Claude, you have the ability to guide its responses by prefilling it:
+Lammy supports an array syntax for both OpenAI and Claude models:
 
 ```ruby
 class User
@@ -139,13 +139,16 @@ class User
 
   # (...)
 
-  llm(model: "claude-3-5-sonnet-20240620")
+  llm(model: "gpt-4-0125-preview")
   def welcome
-    context "You are an AI that only writes in lower case."
-    prefill "here's a little poem for you:"
-    "Say hello to #{name.reverse} with a poem."
+    context 'You are an AI that only writes in lower case.' # An optional system message
+
+    [
+      L.user("Say hello to #{name.reverse} with a poem."), # User message goes here
+      L.assistant("here's a little poem for you:"),
+    ]
   end
 end
 ```
 
-Please note that Claude’s response will continue from where your message leaves off.
+This array syntax can be used with both OpenAI and Claude models. However, it's important to note that while Claude allows for prefilling assistant responses (as shown in the example), OpenAI models do not support this feature. For Claude, the model's response will continue from where your last message leaves off, allowing for more controlled conversation flow.

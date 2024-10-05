@@ -1,11 +1,23 @@
 # frozen_string_literal: true
 
 module L
-  # Structured Outputs is a feature that ensures the model will always generate responses
-  # that adhere to your supplied JSON Schema, so you don't need to worry about the model
-  # omitting a required key, or hallucinating an invalid enum value. This is a set of
-  # helper methods to help you define your JSON Schema easily.
   module Schema
+    def system(content)
+      { role: :system, content: content }
+    end
+
+    def user(content)
+      { role: :user, content: content }
+    end
+
+    def assistant(content)
+      { role: :assistant, content: content }
+    end
+
+    # Structured Outputs is a feature that ensures the model will always generate responses
+    # that adhere to your supplied JSON Schema, so you don't need to worry about the model
+    # omitting a required key, or hallucinating an invalid enum value. This is a set of
+    # helper methods to help you define your JSON Schema easily.
     def to_a(object)
       {
         'type' => 'object',

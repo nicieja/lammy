@@ -22,14 +22,15 @@ module L
     end
 
     # Generate a response with support for structured output
-    def chat(user_message, system_message = nil, _ = nil)
+    def chat(user_message, system_message = nil)
       schema = schema(settings)
+      messages = messages(user_message, system_message)
+
       response = client.chat(
         parameters: {
-          model: settings[:model], response_format: schema, messages: [
-            system_message ? { role: :system, content: system_message } : nil,
-            { role: :user, content: user_message }
-          ].compact
+          model: settings[:model],
+          response_format: schema,
+          messages: messages
         }.compact
       ).dig('choices', 0, 'message', 'content')
 
@@ -64,6 +65,15 @@ module L
           'schema' => settings[:schema]
         }
       }
+    end
+
+    def messages(user_message, system_message)
+      return user_message if user_message.is_a?(Array)
+
+      [
+        system_message ? L.system(system_message) : nil,
+        L.user(user_message)
+      ].compact
     end
 
     def array?(schema)

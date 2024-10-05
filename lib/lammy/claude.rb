@@ -19,16 +19,13 @@ module L
     end
 
     # Generate a response with support for structured output
-    def chat(user_message, system_message = nil, prefilled_message = nil)
+    def chat(user_message, system_message = nil)
       response = client.messages(
         parameters: {
           system: system_message,
           model: settings[:model],
           max_tokens: settings[:max_tokens] || 4096,
-          messages: [
-            { role: :user, content: user_message },
-            prefilled_message ? { role: :assistant, content: prefilled_message } : nil
-          ].compact
+          messages: user_message.is_a?(Array) ? user_message : [L.user(user_message)]
         }.compact
       )
 
