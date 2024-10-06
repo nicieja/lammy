@@ -19,20 +19,25 @@ module L
     end
 
     # Generate a response with support for structured output
-    def chat(user_message, system_message = nil)
+    def chat(user_message, system_message = nil, stream = nil)
       response = client.messages(
         parameters: {
           system: system_message,
           model: settings[:model],
           max_tokens: settings[:max_tokens] || 4096,
+          stream: stream ? ->(chunk) { stream.call(stream_content(chunk)) } : nil,
           messages: user_message.is_a?(Array) ? user_message : [L.user(user_message)]
         }.compact
       )
 
-      response.dig('content', 0, 'text')
+      stream || response.dig('content', 0, 'text')
     end
 
     private
+
+    def stream_content(chunk)
+      chunk.dig('delta', 'text')
+    end
 
     def client
       return settings[:client] if settings[:client]
