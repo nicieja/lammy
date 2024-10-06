@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Message = Struct.new(:number, :role, :content)
+Message = Struct.new(:role, :content)
 
 class Chat
   attr_reader :messages
@@ -30,8 +30,8 @@ class Bot
 
   llm(model: 'gpt-4o')
   def talk(message)
-    chat.messages << Message.new(chat.messages.size, :user, message)
-    chat.messages << Message.new(chat.messages.size, :assistant, '')
+    chat.messages << Message.new(:user, message)
+    chat.messages << Message.new(:assistant, '')
 
     stream lambda { |content|
       chat.messages.last.content += content if content
