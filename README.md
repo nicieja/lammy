@@ -139,7 +139,7 @@ class User
 
   # (...)
 
-  llm(model: "gpt-4-0125-preview")
+  llm(model: "claude-3-5-sonnet-20240620")
   def welcome
     context 'You are an AI that only writes in lower case.' # An optional system message
 
@@ -152,3 +152,21 @@ end
 ```
 
 This array syntax can be used with both OpenAI and Claude models. However, it's important to note that while Claude allows for prefilling assistant responses (as shown in the example), OpenAI models do not support this feature. For Claude, the model's response will continue from where your last message leaves off, allowing for more controlled conversation flow.
+
+You can also use the `stream` method to stream responses from the LLM:
+
+```ruby
+class Bot
+  include L
+
+  llm(model: 'gpt-4o')
+  def talk(message)
+    stream ->(content) { puts content }
+    message
+  end
+end
+
+bot = Bot.new
+bot.talk('Hello, how are you?')
+# => "I'm here and ready to help. How can I assist you today?"
+```

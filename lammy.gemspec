@@ -16,6 +16,8 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'hashie', ['~> 5.0']
   s.add_runtime_dependency 'ruby-openai', ['~> 7.1']
 
+  s.add_development_dependency 'pry', ['~> 0.14.2']
+
   s.files = [
     'lib/lammy.rb',
     'lib/lammy/embeddings.rb',

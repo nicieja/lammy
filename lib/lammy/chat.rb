@@ -23,6 +23,10 @@ module L
           @system_message = message
         end
 
+        define_singleton_method(:stream) do |proc|
+          @stream = proc
+        end
+
         # Call the original method to get the user message
         user_message = original_method.bind(self).call(*args, &block)
 
@@ -35,7 +39,7 @@ module L
                    raise "Unsupported model: #{settings[:model]}"
                  end
 
-        client.chat(user_message, @system_message)
+        client.chat(user_message, @system_message, @stream)
       end
     end
   end
