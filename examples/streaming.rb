@@ -45,10 +45,12 @@ end
 bot = Bot.new
 bot.talk('Hello, how are you?')
 bot.chat.history
+
 # => [{:role=>:user, :content=>"Hello, how are you?"}, {:role=>:assistant, :content=>"Hello! I'm here and ready to help. How can I assist you today?"}]
 
 bot.talk("What's your name?")
 bot.chat.history
+
 # => [{:role=>:user, :content=>"Hello, how are you?"},
 # {:role=>:assistant, :content=>"Hello! I'm here and ready to help. How can I assist you today?"},
 # {:role=>:user, :content=>"What's your name?"},

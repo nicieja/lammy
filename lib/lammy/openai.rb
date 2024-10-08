@@ -2,6 +2,7 @@
 
 require 'openai'
 require 'hashie'
+require 'base64'
 
 module L
   # Use the OpenAI API's Ruby library
@@ -35,13 +36,11 @@ module L
         }.compact
       )
 
-      if stream.nil?
-        response = request.dig('choices', 0, 'message', 'content')
-        content = schema ? ::Hashie::Mash.new(JSON.parse(response)) : response
-        array?(schema) ? content.items : content
-      else
-        stream
-      end
+      return stream if stream
+
+      response = request.dig('choices', 0, 'message', 'content')
+      content = schema ? ::Hashie::Mash.new(JSON.parse(response)) : response
+      array?(schema) ? content.items : content
     end
 
     # OpenAI’s text embeddings measure the relatedness of text strings. An embedding is a vector of floating point
@@ -78,8 +77,24 @@ module L
 
       [
         system_message ? L.system(system_message) : nil,
-        L.user(user_message)
+        vision(L.user(user_message))
       ].compact
+    end
+
+    def vision(message)
+      image = message[:_image]
+      base = message.except(:_image)
+
+      return base unless image
+
+      messages = [
+        { 'type' => 'text', 'text' => message[:content] },
+        {
+          'type' => 'image_url', 'image_url' => { 'url' => "data:image/jpeg;base64,#{Base64.encode64(image)}" }
+        }
+      ]
+
+      base.merge(content: messages)
     end
 
     def array?(schema)

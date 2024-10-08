@@ -26,7 +26,7 @@ module L
           model: settings[:model],
           max_tokens: settings[:max_tokens] || 4096,
           stream: stream ? ->(chunk) { stream.call(stream_content(chunk)) } : nil,
-          messages: user_message.is_a?(Array) ? user_message : [L.user(user_message)]
+          messages: user_message.is_a?(Array) ? user_message : [vision(L.user(user_message))]
         }.compact
       )
 
@@ -37,6 +37,21 @@ module L
 
     def stream_content(chunk)
       chunk.dig('delta', 'text')
+    end
+
+    def vision(message)
+      image = message[:_image]
+      base = message.except(:_image)
+
+      return base unless image
+
+      messages = [
+        { 'type' => 'image',
+          'source' => { 'type' => 'base64', 'media_type' => 'image/jpeg', 'data' => Base64.strict_encode64(image) } },
+        { 'type' => 'text', 'text' => message[:content] }
+      ]
+
+      base.merge(content: messages)
     end
 
     def client

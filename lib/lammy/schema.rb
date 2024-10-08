@@ -2,15 +2,25 @@
 
 module L
   module Schema
+    def self.formatted?(content)
+      content.is_a?(Hash) && content.key?(:role) && content.key?(:content)
+    end
+
     def system(content)
+      return content if L::Schema.formatted?(content)
+
       { role: :system, content: content }
     end
 
-    def user(content)
-      { role: :user, content: content }
+    def user(content, image: nil)
+      return content if L::Schema.formatted?(content)
+
+      { role: :user, content: content, _image: image }
     end
 
     def assistant(content)
+      return content if L::Schema.formatted?(content)
+
       { role: :assistant, content: content }
     end
 
