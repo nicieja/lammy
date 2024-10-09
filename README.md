@@ -176,6 +176,7 @@ end
 
 bot = Bot.new
 bot.talk('Hello, how are you?')
+
 # => "I'm here and ready to help. How can I assist you today?"
 ```
 

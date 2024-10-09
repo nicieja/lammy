@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'lammy'
-  s.version = '0.8.0'
+  s.version = '0.8.1'
   s.summary = 'Lammy'
   s.description = 'An LLM library for Ruby'
   s.authors = ['Kamil Nicieja']
@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
     'lib/lammy.rb',
     'lib/lammy/embeddings.rb',
     'lib/lammy/openai.rb',
+    'lib/lammy/claude.rb',
     'lib/lammy/schema.rb',
     'lib/lammy/chat.rb'
   ]

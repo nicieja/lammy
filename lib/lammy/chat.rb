@@ -1,20 +1,13 @@
 # frozen_string_literal: true
 
-module L
+module Lammy
   module Chat
-    def llm(**kwargs)
-      @next_llm_settings = kwargs
-    end
-
-    def handle_llm(method_name)
-      settings = @next_llm_settings
-      @next_llm_settings = nil
-
+    def self.handle(klass, method_name, settings)
       # Unbind the original method
-      original_method = instance_method(method_name)
+      original_method = klass.instance_method(method_name)
 
       # Redefine the method
-      define_method(method_name) do |*args, &block|
+      klass.define_method(method_name) do |*args, &block|
         # Initialize context
         @system_message = nil
 

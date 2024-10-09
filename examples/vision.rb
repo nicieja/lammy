@@ -15,7 +15,8 @@ end
 
 image = Image.new
 image.file = File.read('./examples/assets/ruby.jpg')
-image.describe
+
+puts image.describe
 
 # => "The image is an illustration of a red gem, specifically a ruby. The gem is depicted with facets that reflect
 # light, giving it a shiny and polished appearance. This image is often associated with the Ruby programming language

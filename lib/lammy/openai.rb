@@ -4,7 +4,7 @@ require 'openai'
 require 'hashie'
 require 'base64'
 
-module L
+module Lammy
   # Use the OpenAI API's Ruby library
   class OpenAI
     MODELS = %w[

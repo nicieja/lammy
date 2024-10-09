@@ -3,7 +3,7 @@
 require 'anthropic'
 require 'hashie'
 
-module L
+module Lammy
   # Use the Claude API's Ruby library
   class Claude
     MODELS = %w[

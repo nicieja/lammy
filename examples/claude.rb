@@ -24,4 +24,5 @@ class User
 end
 
 user = User.new(name: 'John Doe')
-user.welcome
+
+puts user.welcome

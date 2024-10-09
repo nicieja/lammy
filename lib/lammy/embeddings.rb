@@ -1,20 +1,13 @@
 # frozen_string_literal: true
 
-module L
+module Lammy
   module Embeddings
-    def v(**kwargs)
-      @next_v_settings = kwargs
-    end
-
-    def handle_v(method_name)
-      settings = @next_v_settings
-      @next_v_settings = nil
-
+    def self.handle(klass, method_name, settings)
       # Unbind the original method
-      original_method = instance_method(method_name)
+      original_method = klass.instance_method(method_name)
 
       # Redefine the method
-      define_method(method_name) do |*args, &block|
+      klass.define_method(method_name) do |*args, &block|
         # # Initialize chunking settings
         # @chunk_by_size = nil
 
