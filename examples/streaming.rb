@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# `Chat` and `Message` could be ActiveRecord models but we're using to use POROs for simplicity
 Message = Struct.new(:role, :content)
 
 class Chat
@@ -19,7 +20,9 @@ class Chat
   end
 end
 
+# This is the main class that will be used to interact with the LLM
 class Bot
+  # To be able to make LLM calls, we first include `L` at the top of our class
   include L
 
   attr_reader :chat
@@ -31,13 +34,17 @@ class Bot
   llm(model: 'gpt-4o')
   def talk(message)
     chat.messages << Message.new(:user, message)
+    # We start with an empty assistant message which will be filled in by the model later
     chat.messages << Message.new(:assistant, '')
 
+    # Use the `stream` method to stream chunks of the response
     stream lambda { |content|
       chat.messages.last.content += content if content
+      # Display the content in the console
       puts content
     }
 
+    # We always give the model the entire history of the conversation so that it can continue from where we left off
     chat.history
   end
 end

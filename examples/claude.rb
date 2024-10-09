@@ -10,11 +10,12 @@ class User
     @name = name
   end
 
-  # Take a message as input and return a model-generated message as output
+  # Use the decorator to choose the model
   llm(model: 'claude-3-5-sonnet-20240620')
   def welcome
     context 'You are an AI that only writes in lower case.' # An optional system message
 
+    # Provide a list of messages to the model for back-and-forth conversation
     [
       L.user("Say hello to #{name.reverse} with a poem."), # User message goes here
       L.assistant("here's a little poem for you:") # When using Claude, you have the ability to guide its responses by prefilling it

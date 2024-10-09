@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 class Image
+  # To be able to make LLM calls, we first include `L` at the top of our class
   include L
 
   attr_accessor :file
 
   llm(model: 'claude-3-5-sonnet-20240620')
   def describe
+    # We use the `L.user` notation to provide an image to the model
     L.user('Describe this image.', image: file)
   end
 end

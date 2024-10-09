@@ -1,8 +1,8 @@
 # Lammy
 
-Lammy is a simple LLM library for Ruby. It doesn’t treat prompts as just strings. They represent the entire code that generates the strings sent to a LLM. The abstraction also makes it easy to attach these methods directly to models, avoiding the need for boilerplate service code.
+Lammy is a simple LLM library for Ruby. It doesn't treat prompts as just strings. They represent the entire code that generates the strings sent to a LLM. The abstraction also makes it easy to attach these methods directly to models, avoiding the need for boilerplate service code.
 
-The approach is inspired by [Python’s ell](https://github.com/MadcowD/ell). I haven’t come across a Ruby port yet, so I decided to start experimenting on my own.
+The approach is inspired by [Python's ell](https://github.com/MadcowD/ell). I haven't come across a Ruby port yet, so I decided to start experimenting on my own.
 
 ## Installation
 
@@ -38,6 +38,10 @@ require "lammy"
 
 We currently support OpenAI's models and Anthropic's Claude. You can use any model that supports the OpenAI API or Claude. Make sure to set the `OPENAI_API_KEY` environment variable for OpenAI models or the `ANTHROPIC_API_KEY` for Claude models.
 
+### Chat
+
+Lammy allows you to interact with a chat model using the `llm` decorator. The `llm` decorator accepts a `model` argument, where you specify the name of the model you'd like to use.
+
 ```ruby
 class User
   # To be able to make LLM calls, we first include `L` at the top of our class
@@ -52,9 +56,57 @@ class User
   # Take a message as input and return a model-generated message as output
   llm(model: "gpt-4o")
   def welcome
-    context "You are an AI that only writes in lower case." # An optional system message
-    "Say hello to #{name.reverse} with a poem." # User message goes here
+    # User message goes here
+    "Say hello to #{name.reverse} with a poem."
   end
+end
+
+user = User.new(name: "John Doe")
+user.welcome
+
+# => "Hello eoD nhoJ, let's make a cheer,\n
+# With a whimsical poem to bring you near.\n
+# Though your name's in reverse, it’s clear and bright,\n
+# Let's dance in verse on this delightful night!"
+```
+
+### System message
+
+You can provide a system message to the model through the `context` method. This is an optional approach that allows you to give the model additional context. We chose not to use the `system` method because it's a potentially risky Ruby method.
+
+```ruby
+class User
+  include L
+
+  # (...)
+
+  llm(model: "gpt-4o")
+  def welcome
+    # An optional system message
+    context "You are an AI that only writes in lower case."
+    # User message goes here
+    "Say hello to #{name.reverse} with a poem."
+  end
+end
+
+user = User.new(name: "John Doe")
+user.welcome
+
+# => "hello eod nhoj, let's make a cheer,\n
+# with a whimsical poem to bring you near.\n
+# though your name's in reverse, it’s clear and bright,\n
+# let's dance in verse on this delightful night!"
+```
+
+### Structured output for OpenAI's models
+
+You can request OpenAI's models to return a structured JSON output by using the `schema` option in the decorator. This is an optional feature that allows you to define a structured output format for the model. To handle arrays of objects, use `L.to_a`, and for a single object, use `L.to_h`.
+
+```ruby
+class User
+  include L
+
+  # (...)
 
   # Define a structured output schema for Lammy to handle JSON responses.
   # For a single object instead of an array, use `L.to_h`.
@@ -62,27 +114,9 @@ class User
   def friends
     "Hallucinate a list of friends for #{name}."
   end
-
-  # Text embeddings measure the relatedness of text strings. The response
-  # will contain a list of floating point numbers, which you can extract,
-  # save in a vector database, and use for many different use cases.
-  v(model: "text-embedding-3-large", dimensions: 256)
-  def embeddings
-    %Q{
-      Hi, I'm #{name}. I'm a software engineer with a passion for Ruby
-      and open-source development.
-    }
-  end
 end
 
 user = User.new(name: "John Doe")
-user.welcome
-
-# => "hello eoD nhoJ, let's make a cheer,\n
-# with a whimsical poem to bring you near.\n
-# though your name's in reverse, it’s clear and bright,\n
-# let's dance in verse on this delightful night!"
-
 user.friends
 
 # => [{"name"=>"Alice Summers", "city"=>"Austin"},
@@ -95,14 +129,89 @@ user.friends
 #   {"name"=>"Hannah Kim", "city"=>"Miami"},
 #   {"name"=>"Isaac Chen", "city"=>"Boston"},
 #   {"name"=>"Jessica Patel", "city"=>"Houston"}]
-
-user.embeddings
-
-# => [0.123, -0.456, 0.789, ...]
-# This will be the embedding vector returned by the model
 ```
 
-For a more robust setup, you can configure the client directly:
+### Prefilling assistant responses for Claude
+
+Anthtopic decided to improve output consistency and implement JSON mode by allowing users to prefill the model's response. Lammy enables this feature through its array syntax, along with the `L.user` and `L.system` helper methods.
+
+```ruby
+class User
+  include L
+
+  # (...)
+
+  llm(model: "claude-3-5-sonnet-20240620")
+  def welcome
+    # Provide a list of messages to the model for back-and-forth conversation
+    [
+      # User message goes here
+      L.user("Say hello to #{name.reverse} with a poem."),
+      # When using Claude, you have the ability to guide its responses by prefilling it
+      L.assistant("Here's a little poem for you:")
+    ]
+  end
+end
+```
+
+Although only Claude models prefill responses, the array syntax can be applied to both OpenAI and Claude models. For OpenAI's models, this feature is used to continue the conversation from where the previous message left off, enabling multi-message conversations like the one in our upcoming example.
+
+### Streaming
+
+You can use the `stream` method to stream responses from the LLM in real time, which can be much faster and help create a more engaging user experience. To receive chunks of the response as they come in, pass a lambda to the `stream` method.
+
+```ruby
+class Bot
+  include L
+
+  llm(model: 'gpt-4o')
+  def talk(message)
+    # Use the `stream` method to stream chunks of the response.
+    # In this case, we're just printing the chunks.
+    stream ->(content) { puts content }
+    # Nothing fancy, simply transfer the message to the model
+    message
+  end
+end
+
+bot = Bot.new
+bot.talk('Hello, how are you?')
+# => "I'm here and ready to help. How can I assist you today?"
+```
+
+This is a simplified explanation of how you can use the `stream` method. For a complete example, refer to [this file](https://github.com/nicieja/lammy/blob/main/examples/streaming.rb). This implementation allows to hold an actual conversation with the model, which is the most common use case for chatbots, and does it using Lammy's array syntax.
+
+### Vision
+
+You can use a vision model to generate a description of an image this way:
+
+```ruby
+class Image
+  include L
+
+  attr_accessor :file
+
+  llm(model: 'gpt-4o')
+  def describe
+    L.user('Describe this image.', image: file)
+  end
+end
+
+image = Image.new
+image.file = File.read('./examples/assets/ruby.jpg')
+image.describe
+
+# => "The image is an illustration of a red gem, specifically a ruby.
+# The gem is depicted with facets that reflect light, giving it a shiny
+# and polished appearance. This image is often associated with
+# the Ruby programming language logo."
+```
+
+The `L.user` helper method must be used to attach the image to the prompt.
+
+### Custom clients
+
+For a more robust setup, you can configure the client directly and pass it to the decorator.
 
 ```ruby
 # Helicone is an open-source LLM observability platform for developers
@@ -124,6 +233,7 @@ class User
 
   # (...)
 
+  # Pass the Helicone client to Lammy's decorator
   llm(model: "gpt-4o", client: $helicone)
   def description
     "Describe #{name} in a few sentences."
@@ -131,7 +241,9 @@ class User
 end
 ```
 
-Lammy supports an array syntax for both OpenAI and Claude models:
+### Embeddings
+
+You can use the embeddings endpoint to obtain a vector of numbers that represents an input. These vectors can be compared across different inputs to efficiently determine their similarity. Currently, Lammy supports only OpenAI's embeddings endpoint.
 
 ```ruby
 class User
@@ -139,57 +251,23 @@ class User
 
   # (...)
 
-  llm(model: "claude-3-5-sonnet-20240620")
-  def welcome
-    context 'You are an AI that only writes in lower case.' # An optional system message
-
-    [
-      L.user("Say hello to #{name.reverse} with a poem."), # User message goes here
-      L.assistant("here's a little poem for you:"),
-    ]
-  end
-end
-```
-
-This array syntax can be used with both OpenAI and Claude models. However, it's important to note that while Claude allows for prefilling assistant responses (as shown in the example), OpenAI models do not support this feature. For Claude, the model's response will continue from where your last message leaves off, allowing for more controlled conversation flow.
-
-You can also use the `stream` method to stream responses from the LLM:
-
-```ruby
-class Bot
-  include L
-
-  llm(model: 'gpt-4o')
-  def talk(message)
-    stream ->(content) { puts content }
-    message
+  # Text embeddings measure the relatedness of text strings. The response
+  # will contain a list of floating point numbers, which you can extract,
+  # save in a vector database, and use for many different use cases.
+  v(model: "text-embedding-3-large", dimensions: 256)
+  def embeddings
+    %Q{
+      Hi, I'm #{name}. I'm a software engineer with a passion for Ruby
+      and open-source development.
+    }
   end
 end
 
-bot = Bot.new
-bot.talk('Hello, how are you?')
-# => "I'm here and ready to help. How can I assist you today?"
+user = User.new(name: "John Doe")
+user.embeddings
+
+# => [0.123, -0.456, 0.789, ...]
+# This will be the embedding vector returned by the model
 ```
 
-You can use a vision model to generate a description of an image.
-
-```ruby
-class Image
-  include L
-
-  attr_accessor :file
-
-  llm(model: 'gpt-4o')
-  def describe
-    L.user('Describe this image.', image: file)
-  end
-end
-
-image = Image.new
-image.file = File.read('./examples/assets/ruby.jpg')
-image.describe
-
-# => "The image is an illustration of a red gem, specifically a ruby. The gem is depicted with facets that reflect
-# light, giving it a shiny and polished appearance. This image is often associated with the Ruby programming language
-# logo."
-```
+Now you're able to store this vector in a vector database, such as `pgvector`, and use it to compare the similarity of different inputs. For example, you can use the [cosine similarity](https://en.wikipedia.org/wiki/Cosine_similarity) to determine the similarity between two vectors.
