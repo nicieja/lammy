@@ -164,7 +164,7 @@ You can use the `stream` method to stream responses from the LLM in real time, w
 class Bot
   include L
 
-  llm(model: 'gpt-4o')
+  llm(model: "gpt-4o")
   def talk(message)
     # Use the `stream` method to stream chunks of the response.
     # In this case, we're just printing the chunks.
@@ -175,7 +175,7 @@ class Bot
 end
 
 bot = Bot.new
-bot.talk('Hello, how are you?')
+bot.talk("Hello, how are you?")
 
 # => "I'm here and ready to help. How can I assist you today?"
 ```
@@ -192,14 +192,14 @@ class Image
 
   attr_accessor :file
 
-  llm(model: 'gpt-4o')
+  llm(model: "gpt-4o")
   def describe
-    L.user('Describe this image.', image: file)
+    L.user("Describe this image.", image: file)
   end
 end
 
 image = Image.new
-image.file = File.read('./examples/assets/ruby.jpg')
+image.file = File.read("./examples/assets/ruby.jpg")
 image.describe
 
 # => "The image is an illustration of a red gem, specifically a ruby.
