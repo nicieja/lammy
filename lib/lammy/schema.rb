@@ -15,7 +15,7 @@ module L
     def user(content, image: nil)
       return content if L::Schema.formatted?(content)
 
-      { role: :user, content: content, _image: image }
+      { role: :user, content: content, _image: image }.compact
     end
 
     def assistant(content)
