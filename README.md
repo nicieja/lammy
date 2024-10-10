@@ -280,3 +280,25 @@ user.embeddings
 ```
 
 Now you're able to store this vector in a vector database, such as `pgvector`, and use it to compare the similarity of different inputs. For example, you can use the [cosine similarity](https://en.wikipedia.org/wiki/Cosine_similarity) to determine the similarity between two vectors.
+
+## Versioning
+
+Semantic versioning is used. For a version number `major.minor.patch`, unless `major` is 0:
+
+1. `major` version is incremented when incompatible API changes are made,
+2. `minor` version is incremented when functionality is added in a backwards-compatible manner,
+3. `patch` version is incremented when backwards-compatible bug fixes are made.
+
+Major version "zero" (0.y.z) is for initial development. Anything may change at any time. The public API should not be considered stable. Furthermore, version "double-zero" (0.0.x) is not intended for public use, as even minimal functionality is not guaranteed to be implemented yet.
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch: `git checkout -b my-new-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin my-new-feature`
+5. Create a new pull request
+
+## License
+
+Lammy is released under the MIT License.
