@@ -4,6 +4,14 @@ Lammy is a simple LLM library for Ruby. It doesn't treat prompts as just strings
 
 The approach is inspired by [Python's ell](https://github.com/MadcowD/ell). I haven't come across a Ruby port yet, so I decided to start experimenting on my own.
 
+## Why?
+
+I wanted to create a simple library that would let me use LLMs in my Ruby projects without dealing with a lot of boilerplate code.
+
+Using something like `langchain` felt too complex for many of my needs. Another option would be to integrate a library directly with a framework like Ruby on Rails, leveraging its conventions. You could, for example, store prompts in the database or as views. But that seemed like overkill for what I needed, and it would add a dependency on the framework, making it harder to use in simple programs.
+
+Personally, I don't think prompt engineering needs to be that complicated, which is why the `ell` approach—treating prompts like simple functions—really resonated with me. I wanted to bring something similar to Ruby. I don’t see why LLMs can't be treated like databases in Active Record, where all the complexity is abstracted away. You can query without needing to think much about the underlying SQL. With Lammy, the idea is similar: you just define your prompt in a method on a model and call it like any other method.
+
 ## Installation
 
 ### Bundler
