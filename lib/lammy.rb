@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-module Lammy; end
-
 require 'lammy/embeddings'
 require 'lammy/claude'
 require 'lammy/openai'
