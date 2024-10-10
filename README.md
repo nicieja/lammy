@@ -28,6 +28,8 @@ And then execute:
 $ bundle install
 ```
 
+You can find a basic example of how to use Lammy in Rails in the [lammy-rails-example](https://github.com/nicieja/lammy-rails-example) repository.
+
 ### Gem install
 
 Or install with:
