@@ -46,7 +46,7 @@ require "lammy"
 
 ## Usage
 
-We currently support OpenAI's models and Anthropic's Claude. You can use any model that supports the OpenAI API or Claude. Make sure to set the `OPENAI_API_KEY` environment variable for OpenAI models or the `ANTHROPIC_API_KEY` for Claude models.
+We currently support OpenAI's models and Anthropic's Claude. You can use any model that supports the OpenAI API or Claude. Make sure to set the `OPENAI_ACCESS_TOKEN` environment variable for OpenAI models or the `ANTHROPIC_API_KEY` for Claude models.
 
 ### Chat
 
