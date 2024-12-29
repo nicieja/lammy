@@ -78,7 +78,7 @@ module Lammy
         'type' => 'json_schema',
         'json_schema' => {
           'name' => 'schema',
-          'schema' => settings[:schema]
+          'schema' => settings[:schema].merge('additionalProperties' => false)
         }
       }
     end

@@ -36,17 +36,15 @@ module L
             'type' => 'array', 'items' => to_h(object)
           }
         },
-        'required' => ['items'],
-        'additionalProperties' => false
+        'required' => ['items']
       }
     end
 
     def to_h(object)
       {
         'type' => 'object',
-        "properties": object.inject({}) { |h, (k, v)| h.merge(k.to_s => { 'type' => v.to_s }) },
-        "required": object.keys,
-        "additionalProperties": false
+        'properties' => object.inject({}) { |h, (k, v)| h.merge(k.to_s => v.is_a?(Symbol) ? { 'type' => v.to_s } : v) },
+        'required' => object.keys
       }
     end
   end
