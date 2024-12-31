@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
-require 'lammy/embeddings'
-require 'lammy/claude'
-require 'lammy/openai'
-require 'lammy/schema'
-require 'lammy/chat'
-
-module L
-  extend Schema
-
+module Lammy
   class Configuration
     attr_accessor :model, :client
 
@@ -25,6 +17,16 @@ module L
   def self.configure
     yield(configuration)
   end
+end
+
+require 'lammy/embeddings'
+require 'lammy/claude'
+require 'lammy/openai'
+require 'lammy/schema'
+require 'lammy/chat'
+
+module L
+  extend Schema
 
   def self.included(base)
     base.extend ClassMethods

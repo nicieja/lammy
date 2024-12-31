@@ -40,7 +40,7 @@ module Lammy
 
       request = client.chat(
         parameters: {
-          model: settings[:model],
+          model: settings[:model] || Lammy.configuration.model,
           response_format: schema,
           messages: messages,
           stream: stream ? ->(chunk) { stream.call(stream_content(chunk)) } : nil
@@ -118,6 +118,7 @@ module Lammy
 
     def client
       return settings[:client] if settings[:client]
+      return Lammy.configuration.client if Lammy.configuration.client
 
       @client ||= ::OpenAI::Client.new(
         access_token: ENV.fetch('OPENAI_ACCESS_TOKEN')

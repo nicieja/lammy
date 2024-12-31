@@ -293,7 +293,22 @@ You can set a global LLM model that will be used by default in your application.
 
 ```ruby
 Lammy.configure do |config|
-  config.model = 'gpt-4o'
+  config.model = "gpt-4o"
+end
+```
+
+With a global model configured, you can now use the `llm` decorator without specifying the model:
+
+```ruby
+class User
+  include L
+
+  # (...)
+
+  llm
+  def welcome
+    "Say hello to #{name} with a poem."
+  end
 end
 ```
 

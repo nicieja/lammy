@@ -24,7 +24,7 @@ module Lammy
       response = client.messages(
         parameters: {
           system: system_message,
-          model: settings[:model],
+          model: settings[:model] || Lammy.configuration.model,
           max_tokens: settings[:max_tokens] || 4096,
           stream: stream ? ->(chunk) { stream.call(stream_content(chunk)) } : nil,
           messages: user_message.is_a?(Array) ? user_message : [vision(L.user(user_message))]
@@ -57,6 +57,7 @@ module Lammy
 
     def client
       return settings[:client] if settings[:client]
+      return Lammy.configuration.client if Lammy.configuration.client
 
       @client ||= ::Anthropic::Client.new(
         access_token: ENV.fetch('ANTHROPIC_API_KEY')
