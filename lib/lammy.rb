@@ -9,6 +9,22 @@ require 'lammy/chat'
 module L
   extend Schema
 
+  class Configuration
+    attr_accessor :model
+
+    def initialize
+      @model = nil
+    end
+  end
+
+  def self.configuration
+    @configuration ||= Configuration.new
+  end
+
+  def self.configure
+    yield(configuration)
+  end
+
   def self.included(base)
     base.extend ClassMethods
   end

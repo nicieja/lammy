@@ -23,7 +23,8 @@ module Lammy
         # Call the original method to get the user message
         user_message = original_method.bind(self).call(*args, &block)
 
-        client = case settings[:model]
+        model = settings[:model] || L.configuration.model
+        client = case model
                  when *OpenAI::MODELS
                    OpenAI.new(settings)
                  when *Claude::MODELS
