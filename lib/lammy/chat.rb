@@ -29,7 +29,7 @@ module Lammy
                 elsif Claude::MODELS.any? { |regex| model =~ regex }
                   Claude.new(settings)
                 else
-                  raise "Unsupported model: #{settings[:model]}"
+                  raise "Unsupported model: #{model}"
                 end
 
         client.chat(user_message, @system_message, @stream)
