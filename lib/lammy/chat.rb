@@ -24,14 +24,13 @@ module Lammy
         user_message = original_method.bind(self).call(*args, &block)
 
         model = settings[:model] || Lammy.configuration.model
-        client = case model
-                 when *OpenAI::MODELS
-                   OpenAI.new(settings)
-                 when *Claude::MODELS
-                   Claude.new(settings)
-                 else
-                   raise "Unsupported model: #{settings[:model]}"
-                 end
+        client = if OpenAI::MODELS.any? { |regex| model =~ regex }
+                  OpenAI.new(settings)
+                elsif Claude::MODELS.any? { |regex| model =~ regex }
+                  Claude.new(settings)
+                else
+                  raise "Unsupported model: #{settings[:model]}"
+                end
 
         client.chat(user_message, @system_message, @stream)
       end
