@@ -283,6 +283,40 @@ user.embeddings
 
 Now you're able to store this vector in a vector database, such as `pgvector`, and use it to compare the similarity of different inputs. For example, you can use the [cosine similarity](https://en.wikipedia.org/wiki/Cosine_similarity) to determine the similarity between two vectors.
 
+## Configuration
+
+Lammy allows you to configure global settings using a configuration block. This is useful for setting a default model or a custom client that will be used across your application.
+
+### Setting a global model
+
+You can set a global LLM model that will be used by default in your application. This is done using the `configure` method:
+
+```ruby
+Lammy.configure do |config|
+  config.model = 'gpt-4o'
+end
+```
+
+### Setting a custom client
+
+You can also set a global custom client. This is useful if you want to use a specific client configuration throughout your application:
+
+```ruby
+Lammy.configure do |config|
+  config.client = OpenAI::Client.new(
+    access_token: "access_token_goes_here",
+    uri_base: "https://oai.hconeai.com/",
+    request_timeout: 240,
+    extra_headers: {
+      "X-Proxy-TTL" => "43200",
+      "X-Proxy-Refresh": "true",
+      "Helicone-Auth": "Bearer HELICONE_API_KEY",
+      "helicone-stream-force-format" => "true",
+    }
+  )
+end
+```
+
 ## Versioning
 
 Semantic versioning is used. For a version number `major.minor.patch`, unless `major` is 0:
