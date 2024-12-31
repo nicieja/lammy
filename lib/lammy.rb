@@ -10,10 +10,11 @@ module L
   extend Schema
 
   class Configuration
-    attr_accessor :model
+    attr_accessor :model, :client
 
     def initialize
       @model = nil
+      @client = nil
     end
   end
 

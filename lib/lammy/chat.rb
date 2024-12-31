@@ -24,7 +24,7 @@ module Lammy
         user_message = original_method.bind(self).call(*args, &block)
 
         model = settings[:model] || L.configuration.model
-        client = case model
+        client = L.configuration.client || case model
                  when *OpenAI::MODELS
                    OpenAI.new(settings)
                  when *Claude::MODELS
