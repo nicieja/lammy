@@ -192,6 +192,32 @@ bot.talk("Hello, how are you?")
 
 This is a simplified explanation of how you can use the `stream` method. For a complete example, refer to [this file](https://github.com/nicieja/lammy/blob/main/examples/streaming.rb). This implementation allows to hold an actual conversation with the model, which is the most common use case for chatbots, and does it using Lammy's array syntax.
 
+### Asynchronous generation
+
+You can use the `async` option to run the method asynchronously. This is useful for generating long-running responses, such as chatbots, and can be combined with streaming. To use this feature, you need to configure Sidekiq and include the `Lammy::Job` module in your application.
+
+```ruby
+# config/initializers/lammy.rb
+require 'lammy/sidekiq' # Configure Sidekiq worker for processing async jobs
+
+# app/models/user.rb
+class User < ApplicationRecord
+  attribute :name, :string
+
+  # Use the `llm` method with `async: true` to run the method asynchronously
+  llm(model: 'gpt-4o', async: true)
+  def welcome
+    "Say hello to #{name} with a poem."
+  end
+end
+
+user = User.create!(name: 'John')
+puts user.welcome
+# => "ea39ea2c55d568cf96032ce1"
+```
+
+For this feature to work, your model must be saved to the database and have a retrievable `id` attribute.
+
 ### Vision
 
 You can use a vision model to generate a description of an image this way:

@@ -32,6 +32,12 @@ module L
     base.extend ClassMethods
   end
 
+  def _lammy_perform_now(&block)
+    @_with_sync_lammy = true
+    block.call
+    @_with_sync_lammy = false
+  end
+
   # Wrap generative methods with handlers
   module ClassMethods
     def llm(**kwargs)

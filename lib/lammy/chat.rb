@@ -32,7 +32,11 @@ module Lammy
                   raise "Unsupported model: #{model}"
                 end
 
-        client.chat(user_message, @system_message, @stream)
+        if !settings[:async] || @_with_sync_lammy
+          client.chat(user_message, @system_message, @stream)
+        else
+          ::Lammy::Job.perform_async(klass.name, self.id, method_name, *args)
+        end
       end
     end
   end
