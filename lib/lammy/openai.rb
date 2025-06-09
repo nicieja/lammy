@@ -8,13 +8,9 @@ module Lammy
   # Use the OpenAI API's Ruby library
   class OpenAI
     MODELS = [
-      /^gpt-4o(?:-\d{4}-\d{2}-\d{2})?$/, /^chatgpt-4o-latest$/,
-      /^gpt-4o-mini(?:-\d{4}-\d{2}-\d{2})?$/,
-      /^o1(?:-preview(?:-\d{4}-\d{2}-\d{2})?)?$/,
-      /^o1-mini(?:-\d{4}-\d{2}-\d{2})?$/,
-      /^gpt-3\.5-turbo$/,
-      /^gpt-4(?:-turbo(?:-\d{4}-\d{2}-\d{2})?|-32k|-\d{4}-preview|-vision-preview)?$/,
-      /^gpt-3\.5-turbo-(?:\d{4}|\d{2}k-\d{4}|-instruct)$/,
+      /^gpt-.*$/,
+      /^chatgpt-.*$/,
+      /^o\d+(?:-.*)?$/,
       /^(?:davinci|babbage)-002$/
     ].freeze
 
